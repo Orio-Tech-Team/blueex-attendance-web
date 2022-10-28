@@ -91,7 +91,7 @@
         />
       </div>
       <button
-        onclick="manualAttendance()"
+        id="addBtn"
         style="
           background-color: #0047ba;
           border: none;
@@ -102,52 +102,82 @@
       >
         Add
       </button>
-    </div>
+      <div class="modal_main">
+        <div class="modal_body">
+          <h1 id="modal_h1">Account Added <br> Successfully!</h1>
+        </div>
+      </div>
     <script>
+      //
+      const addBtn = document.getElementById("addBtn");
+      const empId = document.querySelector("#id");
+      const date = document.querySelector("#date");
+      const intime = document.querySelector("#intime");
+      const outtime = document.querySelector("#outtime");
+      const modal_main = document.querySelector(".modal_main");
+      //
+
+      const manualAttendance = async () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          emp_id: empId.value,
+          date: date.value,
+          in_time: `${intime.value}`,
+          out_time: `${outtime.value}`,
+        });
+
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+        };
+
+        await fetch(
+          "http://api.blue-ex.com:5003/attendance-app/attendance/manual",
+          requestOptions
+        )
+          .then((response) => response.text())
+          .then((result) => {console.log(result);
+            modal_main.classList.add("active");
+            setTimeout(() => {
+              modal_main.classList.remove("active");
+            }, 1300);
+          })
+          .catch((error) => console.log("error", error));
+      };
+
+      window.onload = () => {
+        var url = new URL(window.location.href);
+        var isUpdate = url.searchParams.get("update");
+        if (isUpdate != null) {
+          addBtn.innerHTML = "Update";
+          document.getElementById("modal_h1").innerHTML = `Account Updated <br> Successfully!`
+          const data = JSON.parse(localStorage.getItem("employee"));
+
+          empId.value = data.id;
+          date.value = data.date;
+          intime.value = data.inTime;
+          outtime.value = data.outTime;
+        }
+      };
+      //
       const params = new Proxy(new URLSearchParams(window.location.search), {
         get: (searchParams, prop) => searchParams.get(prop),
       });
       // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
       let value = params.some_key; // "some_value"
-      console.log(value);
 
-      const manualAttendance = () => {
-        var myHeaders = new Headers();
-        myHeaders.append('Content-Type', 'application/json');
+      addBtn.addEventListener("click", manualAttendance);
 
-        const empId = document.querySelector('#id');
-        const date = document.querySelector('#date');
-        const intime = document.querySelector('#intime');
-        const outtime = document.querySelector('#outtime');
-
-        console.log(intime.value);
-
-        var raw = JSON.stringify({
-          emp_id: empId.value,
-          date: date.value,
-          in_time: `${intime.value}:10`,
-          out_time: `${outtime.value}:10`,
-        });
-
-        var requestOptions = {
-          method: 'POST',
-          headers: myHeaders,
-          body: raw,
-        };
-
-        fetch(
-          'http://api.blue-ex.com:5003/attendance-app/attendance/manual',
-          requestOptions,
-        )
-          .then((response) => response.text())
-          .then((result) => console.log(result))
-          .catch((error) => console.log('error', error));
-      };
+      //
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+
     <script src="app.js"></script>
   </body>
 </html>
