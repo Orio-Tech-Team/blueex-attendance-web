@@ -15,7 +15,8 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"
+      type="text/css"
+      href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css"
     />
   </head>
 
@@ -49,7 +50,7 @@
     </div>
     <div style="margin-left: 20%; z-index: 2">
       <table
-        id="example"
+        id="myTable"
         class="table table-striped table-bordered"
         style="width: 100%"
       >
@@ -62,42 +63,19 @@
             <th>Out Time</th>
             <th>Workin Hours</th>
             <th>Attendance Type</th>
+            <th>Shift</th>
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody></tbody>
       </table>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <!-- <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script> -->
-    <script src="app.js"></script>
+
     <script>
       function padTo2Digits(num) {
         return num.toString().padStart(2, "0");
       }
-
-      // function convertMsToHM(milliseconds) {
-      //   let seconds = Math.floor(milliseconds / 1000);
-      //   let minutes = Math.floor(seconds / 60);
-      //   let hours = Math.floor(minutes / 60);
-
-      //   seconds = seconds % 60;
-      //   // 👇️ if seconds are greater than 30, round minutes up (optional)
-      //   minutes = seconds >= 30 ? minutes + 1 : minutes;
-
-      //   minutes = minutes % 60;
-
-      //   // 👇️ If you don't want to roll hours over, e.g. 24 to 00
-      //   // 👇️ comment (or remove) the line below
-      //   // commenting next line gets you `24:00:00` instead of `00:00:00`
-      //   // or `36:15:31` instead of `12:15:31`, etc.
-      //   hours = hours % 24;
-
-      //   return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(
-      //     seconds,
-      //   )}`;
-      // }
 
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -135,28 +113,48 @@
         tbody.innerHTML = "";
         //
         //
+        console.log(data);
         const slicedData = data.slice(0, 10);
         //
         //
-        slicedData.map(
-          (item) =>
-            (tbody.innerHTML += `<tr>
-                      <td>${item.employee_number}</td>
-                      <td>${item.employee_name}</td>
-                      <td>${item.attendance_date}</td>
-                      <td>${item.intime}</td>
-                      <td>${item.outtime}</td>
-                      <td>${item.working_hours}</td>
-                      <td>${item.type}</td>
-                      <td>
-                        <button class="editBtn" onclick="editFunction('${item.employee_number}','${item.attendance_date}','${item.intime}','${item.outtime}')">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
-                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
-                          </svg>
-                        </button>
-                      </td>
-                  </tr>`)
+        data.map((item) =>
+          // (tbody.innerHTML += `<tr>
+          //           <td>${item.employee_number}</td>
+          //           <td>${item.employee_name}</td>
+          //           <td>${item.attendance_date}</td>
+          //           <td>${item.intime}</td>
+          //           <td>${item.outtime}</td>
+          //           <td>${item.working_hours}</td>
+
+          //           <td>${item.type}</td>
+          //           <td>${item.shift}</td>
+          //           <td>
+          // <button class="editBtn" onclick="editFunction('${item.employee_number}','${item.attendance_date}','${item.intime}','${item.outtime}')">
+          //   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+          //     <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+          //   </svg>
+          // </button>
+          //           </td>
+          //       </tr>`)
+          {
+            var btn =
+              '<button class="editBtn" onclick="editFunction(\'${item.employee_number}\',\'${item.attendance_date}\',\'${item.intime}\',\'${item.outtime}\')"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/></svg></button>';
+            $("#myTable")
+              .dataTable()
+              .fnAddData([
+                item.employee_number,
+                item.employee_name,
+                item.attendance_date,
+                item.intime,
+                item.outtime,
+                item.working_hours,
+                item.type,
+                item.shift,
+                btn,
+              ]);
+          }
         );
+        $("#myTable").dataTable();
       };
       window.onload = getData();
       //
@@ -171,6 +169,19 @@
         url = "./form.html?update=" + true;
         document.location.href = url;
       };
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="app.js"></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $("#myTable").DataTable();
+      });
     </script>
   </body>
 </html>
