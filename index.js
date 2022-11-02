@@ -5,7 +5,7 @@ const btnsubmit = () =>{
     var pwd = document.getElementById("pwd").value;
 
 
-    if (uname === "anam" && pwd === "123") {
+    if (uname === "anam" && pwd === "anum123") {
         window.location.replace("attendance.html");
         
     } else {
