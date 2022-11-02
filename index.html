@@ -8,22 +8,23 @@
 </head>
 <body>
 <div class="login-page">
+  
     
   <div class="form">
  
-  
         <img
-        src="/images/blue_ex.svg"
+        src="images/blue_ex.svg"
         style="height: 1.9rem; padding: 1rem"
       />
       <input type="text" name="username" placeholder="username" id="uname"/>
       
       <input type="password" name="password" placeholder="password" id="pwd"/>
       <button id="login-form-submit" onclick="btnsubmit()">login</button>
-     
-  
 
-    
+      <div id="login-error-msg-holder">
+        <p id="login-error-msg">Invalid username and password</p>
+      </div>
+
   </div>
 </div>
 
