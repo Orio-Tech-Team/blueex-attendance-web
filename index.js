@@ -10,7 +10,6 @@ const btnsubmit = () =>{
         
     } else {
         loginErrorMsg.style.opacity = 1;
-        // alert("wrong credentials");
     }
     
 
