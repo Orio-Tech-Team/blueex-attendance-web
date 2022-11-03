@@ -6,6 +6,7 @@ const btnsubmit = () =>{
     const loginErrorMsg = document.getElementById("login-error-msg");
 
     if (uname === "anam" && pwd === "anam123") {
+        localStorage.setItem('username', uname);
         window.location.replace("attendance.html");
         
     } else {
@@ -13,4 +14,10 @@ const btnsubmit = () =>{
     }
     
 
+}
+
+const username = localStorage.getItem('username');
+if(username != undefined)
+{
+    window.location.replace("attendance.html");
 }
