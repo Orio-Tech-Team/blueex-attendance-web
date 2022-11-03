@@ -38,6 +38,7 @@
     <div class="header">
       <img src="images/avatar.png" alt="" />
       <div>
+
         <h3 id="loginusername">Anam Saleem</h3>
         <p>SuperAdmin</p>
       </div>
@@ -113,12 +114,32 @@
         tbody.innerHTML = "";
         //
         //
-        console.log(data);
+        // console.log(data);
         const slicedData = data.slice(0, 10);
   
+        function secondsToTime(secs)
+        {
+            var hours = Math.floor(secs / (60 * 60));
+
+            var divisor_for_minutes = secs % (60 * 60);
+            var minutes = Math.floor(divisor_for_minutes / 60);
+
+            var divisor_for_seconds = divisor_for_minutes % 60;
+            var seconds = Math.ceil(divisor_for_seconds);
+
+            return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
+        }
+
+
         data.map((item) =>
-    
+   
           {
+            if( item.working_hours == null){
+              item.working_hours = 0;
+            }
+           const mhworktime =  secondsToTime(item.working_hours)
+
+
             var btn =
               '<button class="editBtn" onclick="editFunction(\'${item.employee_number}\',\'${item.attendance_date}\',\'${item.intime}\',\'${item.outtime}\')"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/></svg></button>';
             $("#myTable")
@@ -129,7 +150,7 @@
                 item.attendance_date,
                 item.intime,
                 item.outtime,
-                item.working_hours,
+                mhworktime,
                 item.type,
                 item.shift,
                 btn,
