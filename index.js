@@ -1,5 +1,5 @@
 
-
+//index.html start
 const btnsubmit = () =>{
     var uname = document.getElementById("uname").value;
     var pwd = document.getElementById("pwd").value;
@@ -16,8 +16,9 @@ const btnsubmit = () =>{
 
 }
 
-const username = localStorage.getItem('username');
 if(username != undefined)
 {
     window.location.replace("attendance.html");
 }
+
+//index.html end
