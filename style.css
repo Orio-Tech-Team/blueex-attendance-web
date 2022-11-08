@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -36,22 +36,34 @@ body {
   position: relative;
 }
 
-.header div  div{
+.header div div {
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   background-color: #ffffff;
-  border: solid 1px #ccc ;
+  border: solid 1px #ccc;
   height: 4rem;
   display: none;
   padding: 0 1rem;
   color: rgb(0, 0, 0);
   left: 2rem;
   top: 3rem;
-  clip-path: polygon(83% 0, 89% 15%, 100% 15%, 100% 100%, 84% 100%, 50% 100%, 20% 99%, 0 100%, 0 16%, 76% 15%);}
+  clip-path: polygon(
+    83% 0,
+    89% 15%,
+    100% 15%,
+    100% 100%,
+    84% 100%,
+    50% 100%,
+    20% 99%,
+    0 100%,
+    0 16%,
+    76% 15%
+  );
+}
 
-  .header div  div p {
+.header div div p {
   padding-top: 1.4rem;
   cursor: pointer;
 }
@@ -134,4 +146,16 @@ body {
 }
 .modal_body h1 {
   font-size: 1.4rem;
+}
+
+.date-select-main {
+  display: flex;
+  padding: 2rem 2rem 0 2rem;
+  gap: 2rem;
+}
+
+.date-select-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }

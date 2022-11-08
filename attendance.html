@@ -18,6 +18,13 @@
       type="text/css"
       href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css"
     />
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"
+    ></script>
   </head>
   <body>
     <!-- Sidebar -->
@@ -38,15 +45,14 @@
     <div class="header">
       <img src="images/avatar.png" alt="" />
       <div>
-
         <h3 id="loginusername">Anam Saleem</h3>
-        <p onclick="showmenu()">SuperAdmin<img src="images/down.png" alt="" style="width: 1.2rem;"></p>
-        <div id = "logoutpopup">
+        <p onclick="showmenu()">
+          SuperAdmin<img src="images/down.png" alt="" style="width: 1.2rem" />
+        </p>
+        <div id="logoutpopup">
           <p onclick="logout()">logout</p>
-       </div>
+        </div>
       </div>
-
-     
     </div>
     <div style="visibility: hidden">
       <h3>Dashboard</h3>
@@ -54,6 +60,24 @@
       <p>Attendance</p>
     </div>
     <div style="margin-left: 20%; z-index: 2">
+      <div class="date-select-main">
+        <div class="date-select-item">
+          <label for="from-date">From</label>
+          <input
+            name="from-date"
+            id="from-date"
+            type="date"
+            class="form-control"
+          />
+        </div>
+        <div class="date-select-item">
+          <label for="to-date">To</label>
+          <input name="to-date" id="to-date" type="date" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-primary" onclick="getData()">
+          Filter
+        </button>
+      </div>
       <table
         id="myTable"
         class="table table-striped table-bordered"
@@ -80,16 +104,18 @@
     <script src="app.js"></script>
     <script>
       function padTo2Digits(num) {
-        return num.toString().padStart(2, "0");
+        return num.toString().padStart(2, '0');
       }
 
       var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append('Content-Type', 'application/json');
 
       let date = new Date();
 
+      console.log(document.getElementById('from-date').value);
+
       let dateString = `${date.getFullYear()}-${padTo2Digits(
-        date.getMonth() + 1
+        date.getMonth() + 1,
       )}-${padTo2Digits(date.getDate())}`;
 
       var raw = JSON.stringify({
@@ -98,73 +124,86 @@
       });
 
       var requestOptions = {
-        method: "POST",
+        method: 'POST',
         headers: myHeaders,
         body: raw,
-        redirect: "follow",
+        redirect: 'follow',
       };
       var data;
       const getData = async () => {
+        console.log('get data');
+        // var table = $('#myTable').DataTable();
+        // table.destroy();
+        // $('#myTable').dataTable();
         data = await fetch(
-          "http://api.blue-ex.com:5003/attendance-app/attendance/getattendancedata",
-          requestOptions
+          'http://api.blue-ex.com:5003/attendance-app/attendance/getattendancedata',
+          requestOptions,
         )
           .then((response) => response.json())
           .then((result) => {
             return result;
           })
-          .catch((error) => console.log("error", error));
+          .catch((error) => console.log('error', error));
 
-        let tbody = document.querySelector("tbody");
-        tbody.innerHTML = "";
+        let tbody = document.querySelector('tbody');
+        tbody.innerHTML = '';
         //
         //
         // console.log(data);
         const slicedData = data.slice(0, 10);
-  
-        function secondsToTime(secs)
-        {
-            var hours = Math.floor(secs / (60 * 60));
 
-            var divisor_for_minutes = secs % (60 * 60);
-            var minutes = Math.floor(divisor_for_minutes / 60);
+        function secondsToTime(secs) {
+          var hours = Math.floor(secs / (60 * 60));
 
-            var divisor_for_seconds = divisor_for_minutes % 60;
-            var seconds = Math.ceil(divisor_for_seconds);
+          var divisor_for_minutes = secs % (60 * 60);
+          var minutes = Math.floor(divisor_for_minutes / 60);
 
-            return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
+          var divisor_for_seconds = divisor_for_minutes % 60;
+          var seconds = Math.ceil(divisor_for_seconds);
+
+          return `${padTo2Digits(hours)}:${padTo2Digits(
+            minutes,
+          )}:${padTo2Digits(seconds)}`;
         }
 
-
-        data.map((item) =>
-   
-          {
-            if( item.working_hours == null){
-              item.working_hours = 0;
-            }
-           const mhworktime =  secondsToTime(item.working_hours)
-
-
-            var btn =
-              '<button class="editBtn" onclick="editFunction(\'${item.employee_number}\',\'${item.attendance_date}\',\'${item.intime}\',\'${item.outtime}\')"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/></svg></button>';
-            $("#myTable")
-              .dataTable()
-              .fnAddData([
-                item.employee_number,
-                item.employee_name,
-                item.attendance_date,
-                item.intime,
-                item.outtime,
-                mhworktime,
-                item.type,
-                item.shift,
-                btn,
-              ]);
+        data.map((item) => {
+          if (item.working_hours == null) {
+            item.working_hours = 0;
           }
-        );
-        $("#myTable").dataTable();
+          const mhworktime = secondsToTime(item.working_hours);
+
+          var btn = `<button class="editBtn" onclick="editFunction('${item.employee_number}','${item.attendance_date}','${item.intime}','${item.outtime}')"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/></svg></button>`;
+          $('#myTable')
+            .dataTable()
+            .fnAddData([
+              item.employee_number,
+              item.employee_name,
+              item.attendance_date,
+              item.intime,
+              item.outtime,
+              mhworktime,
+              item.type,
+              item.shift,
+              btn,
+            ]);
+        });
+        $('#myTable').dataTable();
       };
-      window.onload = getData();
+
+      const onLoad = async () => {
+        const date = new Date();
+        const fromDate = document.getElementById('from-date');
+        const toDate = document.getElementById('to-date');
+        const newDate = `${date.getFullYear()}-${padTo2Digits(
+          date.getMonth(),
+        )}-${padTo2Digits(date.getDate())}`;
+
+        fromDate.value = newDate;
+        toDate.value = newDate;
+        await getData();
+      };
+
+      window.onload = onLoad();
       //
       const editFunction = (id, date, inTime, outTime) => {
         const data = {
@@ -173,22 +212,15 @@
           inTime,
           outTime,
         };
-        localStorage.setItem("employee", JSON.stringify(data));
-        url = "./form.html?update=" + true;
+        localStorage.setItem('employee', JSON.stringify(data));
+        url = './form.html?update=' + true;
         document.location.href = url;
       };
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-   
-    <script
-      type="text/javascript"
-      charset="utf8"
-      src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"
-    ></script>
     <script>
       $(document).ready(function () {
-        $("#myTable").DataTable();
+        $('#myTable').DataTable();
       });
     </script>
   </body>

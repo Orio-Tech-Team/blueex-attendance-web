@@ -169,8 +169,10 @@
           document.getElementById("modal_h1").innerHTML = `Account Updated <br> Successfully!`
           const data = JSON.parse(localStorage.getItem("employee"));
 
+          const newDate = data.date.split("T")
+
           empId.value = data.id;
-          date.value = data.date;
+          date.value = newDate[0];
           intime.value = data.inTime;
           outtime.value = data.outTime;
         }
